@@ -1,0 +1,14 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+<h1>All reviews</h1>
+<a href="/">Go back</a>
+@{
+    foreach(var rev in ViewBag.allrevs){
+        <div class="rev">
+        <h3>Review for @rev.ResName      @rev.Stars stars</h3>
+        <h4>Reviewer: @rev.RevName, @rev.Date.ToString("MMM d, yyyy")</h4>
+        <p>@rev.Rev</p>
+        </div>
+    }
+}

@@ -1,0 +1,34 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+<br>
+<a href="/">Go back</a>
+<br>
+<div id="trails">
+<h1>@ViewBag.trail.name</h1>
+<h3>Description: </h3> 
+    <p>@ViewBag.trail.description</p>
+<h3>Elevation: @ViewBag.trail.elevation feet</h3>
+<h3>Length: @ViewBag.trail.length Miles</h3>
+</div>
+    <div id="map" style="height: 400px; width: 100%;"></div>
+    <script>
+      function initMap() {
+        var _lat = @ViewBag.trail.latitude;
+        
+        var _lon = @ViewBag.trail.longitude;
+        var uluru = {lat: _lat, lng: _lon};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWZpAgdmvkL8w9uitr64RbpMyVdNK8n4k&callback=initMap">
+    </script>
+

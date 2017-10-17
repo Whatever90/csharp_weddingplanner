@@ -1,0 +1,46 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+<p>@ViewBag.alldojos</p>
+<p>@ViewBag.allninjas</p>
+
+
+@{ if(ViewBag.errors!=null){
+        foreach(var error in ViewBag.errors)
+                {
+                    //If there are any errors for a field...
+                    
+                    <p>@error["Errors"][0]["ErrorMessage"]</p>
+                      // We show the first error for that field
+                        
+                    
+                }
+    }
+    }
+@model connectingToDBTESTING.Models.Ninja
+<form action="/store" method="post">
+    <p>Name: <input type="text" name="name"></p>
+    Level <select name="level">
+            <option value=1>1</option>
+            <option value=2>2</option>
+            <option value=3>3</option>
+            <option value=4>4</option>
+            <option value=5>5</option>
+            <option value=6>6</option>
+            <option value=7>7</option>
+            <option value=8>8</option>
+            <option value=9>9</option>
+            <option value=10>10</option>
+            <option value=11>11</option>
+        </select>
+    Dojo <select name="dojo_id">
+           @{
+               foreach(var dojo in ViewBag.alldojos){
+                <option value=@dojo.id>@dojo.name</option>
+                }
+           }
+        </select>
+    <p>Description: <input type="text" name="description"></p>
+    <input type="submit" value="Add">
+    
+</form>

@@ -1,0 +1,43 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+<h1>Hello @ViewBag.cur_user.FirstName @ViewBag.cur_user.LastName</h1>
+<h5>Current balance: $@ViewBag.cur_user.Balance</h5>
+<a href="logout">Logout</a>
+@model connectingToDBTESTING.Models.Transaction
+<form action="action" method="POST">
+    <p>Deposit/Withdraw</p><select name="Activity">
+        <option value=-100>-100</option>
+        <option value=-50>-50</option>
+        <option value=-20>-20</option>
+        <option value=-10>-10</option>
+        <option value=0 selected>0</option>
+        <option value=10>10</option>
+        <option value=20>20</option>
+        <option value=50>50</option>
+        <option value=100>100</option>
+    <input type="submit" value="Submit">
+</select>
+</form>
+
+@{
+    if(ViewBag.account_err != null){
+        <p>@ViewBag.account_err</p>
+    }
+}
+<div>
+    <table>
+    <tr>
+    <th>Amount</th>
+    <th>Date</th>
+  </tr>
+@{
+    foreach(var x in ViewBag.cur_user.Transactions){
+        <tr>
+            <td>$@x.Activity</td>
+            <td>@x.CreatedAt.ToString("MMM d yyyy")</td>
+        </tr>
+    }
+}
+</table>
+</div>

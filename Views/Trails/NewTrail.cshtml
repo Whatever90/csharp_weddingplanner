@@ -1,0 +1,31 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+    @{ if(ViewBag.errors!=null){
+        foreach(var error in ViewBag.errors)
+                {
+                    //If there are any errors for a field...
+                    
+                    <p>@error["Errors"][0]["ErrorMessage"]</p>
+                      // We show the first error for that field
+                        
+                    
+                }
+    }
+    }
+
+<h1>New Trail!</h1>
+<a href="/">Go back</a>
+@model connectingToDBTESTING.Models.Trail
+<form action="/store" method="post">
+    <p>Name: <input type="text" name="name"></p>
+    <p>Length: <input type="text" name="length"></p>
+    <p>Elevation: <input type="text" name="elevation"></p>
+    <p>Check <a href="https://www.findlatitudeandlongitude.com/">this</a> for the right format of latutide and longitude</p>
+    <p>Example: Seattle coordinares: Latitude:38.68551, Longitude:-96.503906</p>
+    <p>Latitude: <input type="text" name="latitude"></p>
+    <p>Longitude: <input type="text" name="longitude"></p>
+    <p>Description: <input type="text" name="description"></p>
+    <input type="submit" value="Create">
+    
+</form>

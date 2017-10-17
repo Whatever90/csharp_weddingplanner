@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+<h1>Hello @ViewBag.cur_user.FirstName @ViewBag.cur_user.LastName</h1>
+<a href="logout">Logout</a>
+
+
+
+<div>
+    <table>
+    <tr>
+        <th>Wedding</th>
+        <th>Date</th>
+        <th >Guests</th>
+        <th>Action</th>
+  </tr>
+@{
+    foreach(var x in ViewBag.AllWeddings){
+        <tr>
+            <td style="background-color: azure;"><a href="wedding/@x.WeddingId">@x.WedderOne and @x.WedderTwo</a></td>
+            <td>@x.Date.ToString("MMM d yyyy")</td>
+            <td style="background-color: azure;">@x.GuestsAmount</td>
+            @if(x.UserId==ViewBag.cur_user.UserId){
+                <td><a href="delete/@x.WeddingId">Delete</a></td>
+            }else{
+                
+                    var here = 0;
+                    foreach(var guest in x.Guests){
+                        if(guest.UserId==ViewBag.cur_user.UserId){
+                            here = 1;
+                        }
+                    }
+                    if(here==0){
+                        <td><a href="attend/@x.WeddingId">Attend</a></td>
+                    }
+                    else {
+                        <td><a href="changeyourmind/@x.WeddingId">Change your mind</a></td>
+                    }
+            }
+                
+        </tr>
+    }
+            
+    
+}
+</table>
+<a href="createwedding">New Wedding</a>
+</div>

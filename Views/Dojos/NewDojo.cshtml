@@ -1,0 +1,23 @@
+@{
+    ViewData["Title"] = "NewDojo";
+}
+    @{ if(ViewBag.errors!=null){
+        foreach(var error in ViewBag.errors)
+                {
+                    //If there are any errors for a field...
+                    
+                    <p>@error["Errors"][0]["ErrorMessage"]</p>
+                      // We show the first error for that field
+                        
+                    
+                }
+    }
+    }
+@model connectingToDBTESTING.Models.Dojo
+<form action="/store" method="post">
+    <p>Name: <input type="text" name="name"></p>
+    <p>Location: <input type="text" name="location"></p>
+    <p>Description: <input type="text" name="description"></p>
+    <input type="submit" value="Create">
+    
+</form>

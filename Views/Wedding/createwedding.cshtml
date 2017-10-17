@@ -1,0 +1,33 @@
+@{
+    ViewData["Title"] = "Create wedding";
+}
+
+
+    <a href="/dashboard" style="margin: 120px 20px">Back</a>
+
+    
+    @model connectingToDBTESTING.Models.Wedding
+            <form action="/newwedding" method="post" style="margin-top: 50px;">
+            <table>
+                <tr><td>Wedder One</td> <td><input type="text" name="WedderOne"></td></tr>
+                <tr><td>Wedder Two</td> <td> <input type="text" name="WedderTwo"></td></tr>
+                <tr><td>Date</td> <td> <input type="date" name="Date"></td></tr>
+                <tr><td>Wedding Address</td> <td> <input type="text" name="Address"></td></tr>
+                </table>
+                <input type="submit" value="Create">
+                
+            </form>
+
+
+@{ if(ViewBag.wed_errors!=null){
+        foreach(var error in ViewBag.wed_errors)
+                {
+                    //If there are any errors for a field...
+                    if(@error["Errors"].Count > 0)
+                    {
+                        // We show the first error for that field
+                        <p style="color: red;">@error["Errors"][0]["ErrorMessage"]</p>
+                    }
+                }
+    }
+    }

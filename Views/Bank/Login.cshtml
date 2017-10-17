@@ -1,0 +1,14 @@
+@{
+    ViewData["Title"] = "Login";
+}
+<form action="/logining" method="post">
+    <p>Email: <input type="text" name="email"></p>
+    <p>Password: <input type="text" name="password"></p>
+    <input type="submit" value="Login">
+    
+</form>
+<a href="/">Back to registration</a>
+@{ if(ViewBag.err!=null){
+        <p style="color: red;">@ViewBag.err</p>
+    }
+    }

@@ -1,0 +1,125 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using connectingToDBTESTING.Models;
+using System.Linq;
+using Newtonsoft.Json;
+using connectingToDBTESTING.Factory;
+using Dapper;
+namespace connectingToDBTESTING.Controllers
+{
+    public class DojosController : Controller
+    {
+        private readonly DojoFactory dojoFactory;
+        private readonly NinjaFactory ninjaFactory;
+        public DojosController(DbConnector connect)
+        {
+            dojoFactory = new DojoFactory();
+            ninjaFactory = new NinjaFactory();
+        }
+        // GET: /Home/
+        [HttpGet]
+        [Route("")]
+        public IActionResult Index()
+        {
+            IEnumerable<Dojo> alldojos = dojoFactory.FindAll();
+            IEnumerable<Ninja> allninjas = ninjaFactory.FindAll();
+            //ViewBag.all = all;
+            return View();
+        }
+
+        [HttpGet]
+        [Route("ninja/{id}")]
+        public IActionResult Ninja(int id)
+        {
+            Ninja res = ninjaFactory.FindByID(id);
+            ViewBag.ninja = res;
+            return View();
+        }
+
+        [HttpPost]
+        [Route("store")]
+        public IActionResult Store(Ninja model)
+        {
+            if(ModelState.IsValid){
+                
+                //List<Dictionary<string, object>> User = _dbConnector.Query($"INSERT INTO users (first_name, last_name, email, password, age) VALUES ('{model.FirstName}', '{model.LastName}', '{model.Email}', '{model.Password}', 0)");
+                ninjaFactory.Add(model);
+                HttpContext.Session.SetObjectAsJson("TheList", null);
+                return RedirectToAction("Index");
+            }else{
+                string messages = string.Join("; ", ModelState.Values
+                                        .SelectMany(x => x.Errors)
+                                        .Select(x => x.ErrorMessage));
+                Console.WriteLine(messages);
+                HttpContext.Session.SetObjectAsJson("TheList", ModelState.Values);
+                return RedirectToAction("Index");
+            }
+            
+            //List<Dictionary<string, object>> Allq = _dbConnector.Query("SELECT * FROM quotes ORDER BY created_at Desc");
+            
+        }
+        //DOJOS-------------------------------------
+        [HttpGet]
+        [Route("newdojo")]
+        public IActionResult NewDojo()
+        {
+            List<Dictionary<string, object>> err = HttpContext.Session.GetObjectFromJson<List<Dictionary<string, object>>>("TheList"); 
+            ViewBag.errors = err;
+            return View();
+        }
+
+        [HttpGet]
+        [Route("dojo/{id}")]
+        public IActionResult Dojo(int id)
+        {
+            Ninja res = ninjaFactory.FindByID(id);
+            ViewBag.ninja = res;
+            return View();
+        }
+
+        [HttpPost]
+        [Route("dojostore")]
+        public IActionResult DojoStore(Dojo model)
+        {
+            if(ModelState.IsValid){
+                
+                //List<Dictionary<string, object>> User = _dbConnector.Query($"INSERT INTO users (first_name, last_name, email, password, age) VALUES ('{model.FirstName}', '{model.LastName}', '{model.Email}', '{model.Password}', 0)");
+                dojoFactory.Add(model);
+                
+                return RedirectToAction("Index");
+            }else{
+                string messages = string.Join("; ", ModelState.Values
+                                        .SelectMany(x => x.Errors)
+                                        .Select(x => x.ErrorMessage));
+                Console.WriteLine(messages);
+                HttpContext.Session.SetObjectAsJson("TheList", ModelState.Values);
+                return RedirectToAction("NewDojo");
+            }
+            
+            //List<Dictionary<string, object>> Allq = _dbConnector.Query("SELECT * FROM quotes ORDER BY created_at Desc");
+            
+        }
+            
+    }
+}
+
+public static class SessionExtensions
+{
+    // We can call ".SetObjectAsJson" just like our other session set methods, by passing a key and a value
+    public static void SetObjectAsJson(this ISession session, string key, object value)
+    {
+        // This helper function simply serializes theobject to JSON and stores it as a string in session
+        session.SetString(key, JsonConvert.SerializeObject(value));
+    }
+       
+    // generic type T is a stand-in indicating that we need to specify the type on retrieval
+    public static T GetObjectFromJson<T>(this ISession session, string key)
+    {
+        string value = session.GetString(key);
+        // Upon retrieval the object is deserialized based on the type we specified
+        return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
+    }
+}

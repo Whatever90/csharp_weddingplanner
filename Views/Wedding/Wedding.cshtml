@@ -1,0 +1,16 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+<h1>@ViewBag.wedding.WedderOne and @ViewBag.wedding.WedderTwo Wedding</h1>
+<a href="/dashboard">Dashboard</a>
+<a href="/logout">Logout</a>
+<h3>Date: @ViewBag.wedding.Date</h3>
+<h3>Address: @ViewBag.wedding.Address</h3>
+<h4>Guests:</h4>
+<ul>
+@{
+    foreach(var guest in ViewBag.wedding.Guests){
+        <li>@guest.User.FirstName @guest.User.LastName</li>
+    }
+}
+        </ul>

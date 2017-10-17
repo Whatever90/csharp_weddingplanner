@@ -1,0 +1,86 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using connectingToDBTESTING.Models;
+using System.Linq;
+using Newtonsoft.Json;
+using connectingToDBTESTING.Factory;
+using Dapper;
+namespace connectingToDBTESTING.Controllers
+{
+    public class TestController : Controller
+    {
+        private RevContext _context;
+ 
+        public TestController(RevContext context)
+        {
+            _context = context;
+        }
+        // GET: /Home/
+        [HttpGet]
+        [Route("")]
+        public IActionResult Index()
+        {
+            List<Review> AllRevs = _context.Reviews.OrderBy(review => review.Date).ToList();
+            List<Dictionary<string, object>> err = HttpContext.Session.GetObjectFromJson<List<Dictionary<string, object>>>("TheList"); 
+            ViewBag.errors = err;
+            ViewBag.allrevs = _context.Reviews.OrderBy(review => review.Date).ToList();
+            return View();
+        }
+
+        [HttpPost]
+        [Route("/addrev")]
+        public IActionResult adduser(Review NewRev)
+        {
+            
+            if(ModelState.IsValid){
+                _context.Add(NewRev);
+                HttpContext.Session.SetObjectAsJson("TheList", null);
+            // OR _context.Users.Add(NewPerson);
+                _context.SaveChanges();
+                return RedirectToAction("allreviews");
+            }else{
+                string messages = string.Join("; ", ModelState.Values
+                                        .SelectMany(x => x.Errors)
+                                        .Select(x => x.ErrorMessage));
+                Console.WriteLine(messages);
+                HttpContext.Session.SetObjectAsJson("TheList", ModelState.Values);
+                return RedirectToAction("Index");
+            }
+            
+        }
+        [HttpGet]
+        [Route("allreviews")]
+        public IActionResult allreviews()
+        {
+            List<Review> AllRevs = _context.Reviews.OrderByDescending(review => review.Date).ToList();    
+            List<Dictionary<string, object>> err = HttpContext.Session.GetObjectFromJson<List<Dictionary<string, object>>>("TheList"); 
+            ViewBag.errors = err;
+            ViewBag.allrevs = AllRevs;
+            return View();
+        }
+        
+            
+    }
+
+
+public static class SessionExtensions
+{
+    // We can call ".SetObjectAsJson" just like our other session set methods, by passing a key and a value
+    public static void SetObjectAsJson(this ISession session, string key, object value)
+    {
+        // This helper function simply serializes theobject to JSON and stores it as a string in session
+        session.SetString(key, JsonConvert.SerializeObject(value));
+    }
+       
+    // generic type T is a stand-in indicating that we need to specify the type on retrieval
+    public static T GetObjectFromJson<T>(this ISession session, string key)
+    {
+        string value = session.GetString(key);
+        // Upon retrieval the object is deserialized based on the type we specified
+        return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
+    }
+}
+}
