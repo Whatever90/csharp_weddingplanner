@@ -93,6 +93,12 @@ namespace connectingToDBTESTING.Controllers
             }
             User cur_user = HttpContext.Session.GetObjectFromJson<User>("cur_user");
             User RetrievedUser2 = _context.Users.SingleOrDefault(user => user.UserId == cur_user.UserId);
+            List<Wedding> filter = _context.Weddings.Where(wed => wed.Date < DateTime.Now).ToList();
+            foreach(Wedding wed in filter){
+                Console.WriteLine(wed.WedderOne);
+                _context.Weddings.Remove(wed);
+                _context.SaveChanges();
+            }
             List<Wedding> AllWeddings = _context.Weddings.OrderBy(wed => wed.Date).Include(w=>w.Guests).ThenInclude(g => g.User).ToList();
             List<Guest> AllGuests = _context.Guests.ToList();
             ViewBag.AllGuests = AllGuests;

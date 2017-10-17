@@ -15,26 +15,32 @@
                 }
     }
     }
-    <div id="main" style="display: flex;">
-        <div class="trails">
+    <div id="main" style="display: flex; background-color: azure; width: 650px">
+        <div class="trails" style="background-color: azure" align="center">
             <h1>Register</h1>
             @model connectingToDBTESTING.Models.User
             <form action="/register" method="post">
-                <p>FIrst Name: <input type="text" name="FirstName"></p>
-                <p>Last Name: <input type="text" name="LastName"></p>
-                <p>Email: <input type="text" name="Email"></p>
-                <p>Password: <input type="text" name="Password"></p>
-                <p>Password Confirmation: <input type="text" name="ConPassword"></p>
-                <input type="submit" value="Register">
-                
+            <table>
+                <tr><td>FIrst Name</td> <td><input type="text" name="FirstName"></td></tr>
+                <tr><td>Last Name</td> <td> <input type="text" name="LastName"></td></tr>
+                <tr><td>Email</td> <td> <input type="text" name="Email"></td></tr>
+                <tr><td>Password</td> <td> <input type="text" name="Password"></td></tr>
+                <tr><td>Password Confirmation</td> <td> <input type="text" name="ConPassword"></td></tr>
+                 <tr><td><input type="submit" value="Register"></td></tr>
+                </table>
             </form>
             <br>
         </div>
-        <div style="margin-top: 60px;">
+        <div style="margin-left: 20px;" align="center">
+            <h1>Login</h1>
             <form action="/logining" method="post">
-                <p>Email: <input type="text" name="email"></p>
-                <p>Password: <input type="text" name="password"></p>
-                <input type="submit" value="Login">
+                <table>
+                    <tr><td><br></td></tr>
+                <tr><td>Email</td> <td> <input type="text" name="email"></td></tr>
+                <tr><td>Password</td> <td> <input type="text" name="password"></td></tr>
+               <tr><td><br></td></tr>
+               <tr><td><br></td></tr>
+                <tr><td><input type="submit" value="Login"></td></tr>
                 
             </form>
             @{ if(ViewBag.err!=null){
